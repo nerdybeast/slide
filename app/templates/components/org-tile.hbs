@@ -1,0 +1,14 @@
+<div class="panel-heading">
+	{{#if isNew}}
+		New
+	{{else}}
+		{{model.name}}
+	{{/if}}
+</div>
+<div class="panel-body">
+	{{#if isNew}}
+		{{#link-to "new-org"}}Add new org{{/link-to}}
+	{{else}}
+		{{model.email}}
+	{{/if}}
+</div>

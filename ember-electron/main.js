@@ -3,12 +3,16 @@ const { app, BrowserWindow, protocol } = require('electron');
 const { dirname, join, resolve } = require('path');
 const protocolServe = require('electron-protocol-serve');
 
+let baseDir = __dirname || resolve(dirname(''));
+
+const startApiServer = require(join(baseDir, 'api-server'));
+
 let mainWindow = null;
 
 // Registering a protocol & schema to serve our Ember application
 protocol.registerStandardSchemes(['serve'], { secure: true });
 protocolServe({
-  cwd: join(__dirname || resolve(dirname('')), '..', 'ember'),
+  cwd: join(baseDir, '..', 'ember'),
   app,
   protocol,
 });
@@ -29,13 +33,16 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
-  mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-  });
+
+	startApiServer();
+
+	mainWindow = new BrowserWindow({
+		width: 800,
+		height: 600,
+	});
 
   // If you want to open up dev tools programmatically, call
-  // mainWindow.openDevTools();
+  mainWindow.openDevTools();
 
   const emberAppLocation = 'serve://dist';
 
