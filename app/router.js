@@ -9,6 +9,7 @@ const Router = Ember.Router.extend({
 Router.map(function() {
   this.route('orgs');
   this.route('new-org');
+  this.route('org', { path: '/org/:org_id' });
 });
 
 export default Router;

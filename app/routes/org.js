@@ -1,9 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
-	model() {
-		return {
-			orgTypes: ['Sandbox', 'Production']
-		}
+	model(params) {
+		return params.org_id;
 	}
 });

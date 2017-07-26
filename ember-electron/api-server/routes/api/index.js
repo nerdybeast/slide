@@ -1,6 +1,7 @@
 const { join } = require('path');
 const express = require('express');
 const serializer = require(join(__dirname, '../../serializer'));
+const Auth = require(join(__dirname, '../../classes/auth'));
 
 let router = express.Router();
 
@@ -102,6 +103,18 @@ router.get('/orgs', (req, res) => {
 
 	const result = serializer.serialize('org', data);
 	return res.json(result);
+});
+
+router.get('/auth', (req, res) => {
+
+	let auth = new Auth('sandbox');
+
+	auth.login('username', 'password').then(loginResult => {
+
+		
+
+	});
+
 });
 
 function injectVersion(version, urls) {

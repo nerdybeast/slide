@@ -1,20 +1,20 @@
 /* eslint-env node */
-const { app, BrowserWindow, protocol } = require('electron');
+const { app, BrowserWindow, protocol, ipcMain } = require('electron');
 const { dirname, join, resolve } = require('path');
 const protocolServe = require('electron-protocol-serve');
+const { api } = require('@slide/api');
 
 let baseDir = __dirname || resolve(dirname(''));
 
-const startApiServer = require(join(baseDir, 'api-server'));
-
 let mainWindow = null;
+let authWindow = null;
 
 // Registering a protocol & schema to serve our Ember application
 protocol.registerStandardSchemes(['serve'], { secure: true });
 protocolServe({
-  cwd: join(baseDir, '..', 'ember'),
-  app,
-  protocol,
+	cwd: join(baseDir, '..', 'ember'),
+	app,
+	protocol,
 });
 
 // Uncomment the lines below to enable Electron's crash reporter
@@ -27,50 +27,58 @@ protocolServe({
 // });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+	if (process.platform !== 'darwin') {
+		app.quit();
+	}
 });
 
 app.on('ready', () => {
 
-	startApiServer();
+	//let server = api();
 
 	mainWindow = new BrowserWindow({
-		width: 800,
-		height: 600,
+		width: 1600,
+		height: 1200
 	});
 
-  // If you want to open up dev tools programmatically, call
-  mainWindow.openDevTools();
+	authWindow = createAuthWindow();
 
-  const emberAppLocation = 'serve://dist';
+	// If you want to open up dev tools programmatically, call
+	mainWindow.openDevTools();
 
-  // Load the ember application using our custom protocol/scheme
-  mainWindow.loadURL(emberAppLocation);
+	const emberAppLocation = 'serve://dist';
 
-  // If a loading operation goes wrong, we'll send Electron back to
-  // Ember App entry point
-  mainWindow.webContents.on('did-fail-load', () => {
-    mainWindow.loadURL(emberAppLocation);
-  });
+	// Load the ember application using our custom protocol/scheme
+	mainWindow.loadURL(emberAppLocation);
 
-  mainWindow.webContents.on('crashed', () => {
-    console.log('Your Ember app (or other code) in the main window has crashed.');
-    console.log('This is a serious issue that needs to be handled and/or debugged.');
-  });
+	// If a loading operation goes wrong, we'll send Electron back to
+	// Ember App entry point
+	mainWindow.webContents.on('did-fail-load', () => {
+		mainWindow.loadURL(emberAppLocation);
+	});
 
-  mainWindow.on('unresponsive', () => {
-    console.log('Your Ember app (or other code) has made the window unresponsive.');
-  });
+	mainWindow.webContents.on('crashed', () => {
+		console.log('Your Ember app (or other code) in the main window has crashed.');
+		console.log('This is a serious issue that needs to be handled and/or debugged.');
+	});
 
-  mainWindow.on('responsive', () => {
-    console.log('The main window has become responsive again.');
-  });
+	mainWindow.on('unresponsive', () => {
+		console.log('Your Ember app (or other code) has made the window unresponsive.');
+	});
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+	mainWindow.on('responsive', () => {
+		console.log('The main window has become responsive again.');
+	});
+
+	mainWindow.on('closed', () => {
+		mainWindow = null;
+	});
+
+	authWindow.on('closed', () => {
+		authWindow = null;
+	});
+  
+	//setTimeout(() => mainWindow.loadURL('http://localhost:5090/oauth2/auth'), 5000);
 });
 
 // Handle an unhandled error in the main thread
@@ -89,7 +97,44 @@ app.on('ready', () => {
 // resources (e.g. file descriptors, handles, etc) before shutting down the process. It is
 // not safe to resume normal operation after 'uncaughtException'.
 process.on('uncaughtException', (err) => {
-  console.log('An exception in the main thread was not handled.');
-  console.log('This is a serious issue that needs to be handled and/or debugged.');
-  console.log(`Exception: ${err}`);
+	console.log('An exception in the main thread was not handled.');
+	console.log('This is a serious issue that needs to be handled and/or debugged.');
+	console.log(`Exception: ${err}`);
 });
+
+ipcMain.on('auth', (event, arg) => {
+	authWindow = authWindow || createAuthWindow();
+	authWindow.loadURL(`http://localhost:5090/oauth2/auth?orgtype=${arg.orgType}`);
+	authWindow.show();
+});
+
+ipcMain.on('auth-result', (event, arg) => {
+	console.info('auth-result => ', arg);
+	authWindow.destroy();
+	mainWindow.webContents.send('auth-result', arg);
+});
+
+function createAuthWindow() {
+	return new BrowserWindow({
+		width: 600,
+		height: 800,
+		parent: mainWindow,
+		modal: true,
+		show: false
+	});
+}
+
+[
+  'home', 
+  'appData', 
+  'userData', 
+  'temp', 
+  'exe', 
+  'module', 
+  'desktop',
+  'documents',
+  'downloads',
+  'music',
+  'pictures',
+  'videos'
+].forEach(key => console.info(`app.getPath('${key}') => `, app.getPath(key)));
