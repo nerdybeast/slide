@@ -5,7 +5,10 @@ export default Ember.Route.extend({
 	backend: Ember.inject.service('backend'),
 
 	model() {
-		return this.get('backend').getOrgs();
+		return Ember.RSVP.hash({
+			orgs: this.get('backend').getOrgs(),
+			orgTypes: ['Sandbox', 'Production']
+		});
 	}
 
 });

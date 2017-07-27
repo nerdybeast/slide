@@ -1,14 +1,14 @@
 <div class="panel-heading">
-	{{#if isNew}}
-		New
-	{{else}}
-		{{model.name}}
-	{{/if}}
+	{{orgName}}
 </div>
 <div class="panel-body">
 	{{#if isNew}}
 		{{#link-to "new-org"}}Add new org{{/link-to}}
+		{{!-- {{#power-select id="orgType" onchange=(action "orgTypeSelection") options=orgTypes as |orgType|}}
+			{{orgType}}
+		{{/power-select}}
+		<button {{action "addNewOrg"}} type="button" class="btn btn-sm btn-success">Add</button> --}}
 	{{else}}
-		{{model.email}}
+		{{model.username}}
 	{{/if}}
 </div>

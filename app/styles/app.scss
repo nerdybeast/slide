@@ -1,1 +1,12 @@
+//Ember Power Select Variables: https://github.com/cibernox/ember-power-select/blob/master/app/styles/ember-power-select/variables.scss
+
+/*
+It may be due to the color scheme of the dark bootstrap theme we are using but the text in the ember-power-select
+was too light to see clearly. Here we are darkening it a little bit.
+*/
+$ember-power-select-text-color: #333;
+
+// $ember-power-select-background-color: #464545 !default;
+// $ember-power-select-border-color: #464545 !default;
+
 @import "ember-power-select";

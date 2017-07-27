@@ -1,12 +1,12 @@
 <div class="container-fluid" style="margin:30px;">
 	<div class="row">
-		{{#each model as |org|}}
+		{{#each model.orgs as |org|}}
 			<div class="col-sm-6 col-md-4 col-lg-4">
 				{{org-tile model=org}}
 			</div>
 		{{/each}}
 		<div class="col-sm-6 col-md-4 col-lg-4">
-			{{org-tile}}
+			{{org-tile orgTypes=model.orgTypes}}
 		</div>
 	</div>
 </div>

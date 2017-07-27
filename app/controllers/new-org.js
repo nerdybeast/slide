@@ -32,7 +32,8 @@ export default Ember.Controller.extend({
 		addNewOrg() {
 			//Ember.$.get(this.get('backend.authUrl'));
 			ipcRenderer.send('auth', {
-				orgType: this.get('orgType')
+				orgType: this.get('orgType'),
+				orgName: this.get('name')
 			});
 		}
 	}

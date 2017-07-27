@@ -2,7 +2,7 @@
 const { app, BrowserWindow, protocol, ipcMain } = require('electron');
 const { dirname, join, resolve } = require('path');
 const protocolServe = require('electron-protocol-serve');
-const { api } = require('@slide/api');
+//const { api } = require('@slide/api');
 
 let baseDir = __dirname || resolve(dirname(''));
 
@@ -104,7 +104,7 @@ process.on('uncaughtException', (err) => {
 
 ipcMain.on('auth', (event, arg) => {
 	authWindow = authWindow || createAuthWindow();
-	authWindow.loadURL(`http://localhost:5090/oauth2/auth?orgtype=${arg.orgType}`);
+	authWindow.loadURL(`http://localhost:5090/oauth2/auth?orgtype=${arg.orgType}&orgname=${arg.orgName}`);
 	authWindow.show();
 });
 
