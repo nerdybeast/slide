@@ -1,14 +1,28 @@
-<div class="panel-heading">
-	{{orgName}}
-</div>
-<div class="panel-body">
+{{#bulma/bulma-card title=orgName}}
 	{{#if isNew}}
-		{{#link-to "new-org"}}Add new org{{/link-to}}
-		{{!-- {{#power-select id="orgType" onchange=(action "orgTypeSelection") options=orgTypes as |orgType|}}
-			{{orgType}}
-		{{/power-select}}
-		<button {{action "addNewOrg"}} type="button" class="btn btn-sm btn-success">Add</button> --}}
+		<div class="field">
+			<label class="label">Name:</label>
+			<div class="control">
+				{{input class="input" value=name}}
+			</div>
+		</div>
+		<div class="field">
+			<label class="label">Org Type:</label>
+			<div class="control">
+				<div class="select" style="width:100%;">
+					<select onchange={{action "orgTypeChange" value="target.value"}} style="width:100%;">
+						<option value="sandbox">Sandbox</option>
+						<option value="production">Production</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div style="margin-top:1.5em;">
+			<div class="control">
+				<button {{action "addNewOrg"}} class="button is-primary">Connect</button>
+			</div>
+		</div>
 	{{else}}
-		{{model.username}}
+		{{org.email}}
 	{{/if}}
-</div>
+{{/bulma/bulma-card}}

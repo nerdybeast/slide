@@ -10,3 +10,14 @@ $ember-power-select-text-color: #333;
 // $ember-power-select-border-color: #464545 !default;
 
 @import "ember-power-select";
+@import "../../node_modules/bulmaswatch/darkly/_variables";
+
+//Reduce the global radius for bulmaswatch elements, the original value is too round.
+$radius: .2em;
+
+@import "../../node_modules/bulma/bulma";
+@import "../../node_modules/bulmaswatch/darkly/_overrides";
+
+.clickable {
+	cursor: pointer;
+}
