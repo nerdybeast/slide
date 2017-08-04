@@ -4,24 +4,28 @@ const { ipcRenderer } = requireNode('electron');
 export default Ember.Component.extend({
 	
 	classNames: ['panel', 'panel-default'],
+	classNameBindings: ['isClickable:clickable'],
 	
-	model: null,
-	selectedOrgType: null,
+	org: null,
+	orgType: null,
+	name: null,
 
-	isNew: Ember.computed.equal('model', null),
+	isNew: Ember.computed.equal('org', null),
+
+	isClickable: Ember.computed.equal('isNew', false),
 
 	orgName: Ember.computed('isNew', function() {
-		return this.get('isNew') ? 'New Connection' : this.get('model.name');
+		return this.get('isNew') ? 'New Connection' : this.get('org.name');
 	}),
 
 	actions: {
-		orgTypeSelection(orgType) {
-			this.set('selectedOrgType', orgType);
+		orgTypeChange(orgType) {
+			this.set('orgType', orgType);
 		},
 		addNewOrg() {
-			//Ember.$.get(this.get('backend.authUrl'));
 			ipcRenderer.send('auth', {
-				orgType: this.get('selectedOrgType')
+				orgType: this.get('orgType'),
+				orgName: this.get('name')
 			});
 		}
 	}
