@@ -103,8 +103,12 @@ process.on('uncaughtException', (err) => {
 });
 
 ipcMain.on('auth', (event, arg) => {
+	
 	authWindow = authWindow || createAuthWindow();
+
+	//TODO: Make port dynamic
 	authWindow.loadURL(`http://localhost:5090/oauth2/auth?orgtype=${arg.orgType}&orgname=${arg.orgName}`);
+
 	authWindow.show();
 });
 
@@ -124,17 +128,17 @@ function createAuthWindow() {
 	});
 }
 
-[
-  'home', 
-  'appData', 
-  'userData', 
-  'temp', 
-  'exe', 
-  'module', 
-  'desktop',
-  'documents',
-  'downloads',
-  'music',
-  'pictures',
-  'videos'
-].forEach(key => console.info(`app.getPath('${key}') => `, app.getPath(key)));
+// [
+//   'home', 
+//   'appData', 
+//   'userData', 
+//   'temp', 
+//   'exe', 
+//   'module', 
+//   'desktop',
+//   'documents',
+//   'downloads',
+//   'music',
+//   'pictures',
+//   'videos'
+// ].forEach(key => console.info(`app.getPath('${key}') => `, app.getPath(key)));

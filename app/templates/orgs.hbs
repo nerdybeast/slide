@@ -2,7 +2,7 @@
 	<div class="columns is-multiline">
 		{{#each model.orgs as |org|}}
 			<div class="column">
-				{{org-tile org=org click=(action "orgSelected" org)}}
+				{{org-tile org=org click=(action "orgSelected" org) confirmOrgDeletion=(action "confirmOrgDeletion" org)}}
 			</div>
 		{{/each}}
 		<div class="column">
@@ -10,5 +10,20 @@
 		</div>
 	</div>
 </div>
+
+{{#bulma/bulma-modal show=modalActive closeable=loading closeModal=(action "closeModal")}}
+	{{#bulma/bulma-card}}
+		<div class="card-content">
+			<div class="content">
+				<p>Are you sure you want to delete this org?</p>
+				<div>
+					<a class="button is-success {{if loading "is-loading"}}" {{action "deleteOrg" org}}>Delete</a>
+					&nbsp;&nbsp;
+					<a class="button is-danger" {{action "closeModal"}}>Cancel</a>
+				</div>
+			</div>
+		</div>
+	{{/bulma/bulma-card}}
+{{/bulma/bulma-modal}}
 
 {{outlet}}

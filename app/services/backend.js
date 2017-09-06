@@ -1,41 +1,38 @@
 import Ember from 'ember';
 import config from 'slide/config/environment';
 
+let domain = config.APP.backendDomain;
+
 export default Ember.Service.extend({
 
 	store: Ember.inject.service('store'),
+	ajax: Ember.inject.service('ajax'),
 
-	authUrl: `${config.APP.backendDomain}/oauth2/auth`,
+	domain,
+	authUrl: `${domain}/oauth2/auth`,
 
-	getOrgs() {
-
-		let store = this.get('store');
-
-		return Ember.$.getJSON(`${config.APP.backendDomain}/orgs`).then(res => {
-			
-			//Push in all the orgs the user has already authenticated with.
-			return store.push({ data: res.data });
-
-			// store.createRecord('org', {
-			// 	name: 'New'
-			// });
-
-			// return store.peekAll('org');
-		});
+	push(ajaxResponse) {
+		return this.get('store').push({ data: ajaxResponse.data });
 	},
 
-	login(credentials) {
+	GET(url) {
+		return Ember.$.getJSON(`${domain}${url}`);
+	},
 
-		let options = {
-			contentType: 'application/json',
-			data: credentials,
-			dataType: 'json'
-		};
+	getOrgById(id) {
+		return this.GET(`/orgs/${id}`).then(res => this.push(res));
+	},
 
-		return Ember.$.ajax(options).then(res => {
+	getOrgs() {
+		return this.GET(`/orgs`).then(res => this.push(res));
+	},
 
-		});
+	deleteOrg(org) {
+		
+	},
 
+	getAvailableSubscription(orgId) {
+		return this.GET(`/orgs/${orgId}/availablesubscription`).then(res => this.push(res));
 	}
 
 });

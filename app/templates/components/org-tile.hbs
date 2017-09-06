@@ -1,28 +1,42 @@
-{{#bulma/bulma-card title=orgName}}
-	{{#if isNew}}
-		<div class="field">
-			<label class="label">Name:</label>
-			<div class="control">
-				{{input class="input" value=name}}
+{{#bulma/bulma-card}}
+	{{#bulma/bulma-card-header title=orgName}}
+		{{#unless isNew}}
+			<div class="card-header-icon">
+				<!--
+				The action "confirmOrgDeletion" DOES NOT have quotes around it because it was passed in by a parent component
+				This also means that we don't have to have an action with this name in the actions hash on this component.
+				NOTE: "click" is a built-in event handler
+				-->
+				{{bulma/bulma-icon icon="trash" click=(action confirmOrgDeletion org)}}
 			</div>
-		</div>
-		<div class="field">
-			<label class="label">Org Type:</label>
-			<div class="control">
-				<div class="select" style="width:100%;">
-					<select onchange={{action "orgTypeChange" value="target.value"}} style="width:100%;">
-						<option value="sandbox">Sandbox</option>
-						<option value="production">Production</option>
-					</select>
+		{{/unless}}
+	{{/bulma/bulma-card-header}}
+	<div class="card-content">
+		{{#if isNew}}
+			<div class="field">
+				<label class="label">Name:</label>
+				<div class="control">
+					{{input class="input" value=name}}
 				</div>
 			</div>
-		</div>
-		<div style="margin-top:1.5em;">
-			<div class="control">
-				<button {{action "addNewOrg"}} class="button is-primary">Connect</button>
+			<div class="field">
+				<label class="label">Org Type:</label>
+				<div class="control">
+					<div class="select" style="width:100%;">
+						<select onchange={{action "orgTypeChange" value="target.value"}} style="width:100%;">
+							<option value="sandbox">Sandbox</option>
+							<option value="production">Production</option>
+						</select>
+					</div>
+				</div>
 			</div>
-		</div>
-	{{else}}
-		{{org.email}}
-	{{/if}}
+			<div style="margin-top:1.5em;">
+				<div class="control">
+					<button {{action "addNewOrg"}} class="button is-primary">Connect</button>
+				</div>
+			</div>
+		{{else}}
+			{{org.email}}
+		{{/if}}
+	</div>
 {{/bulma/bulma-card}}
